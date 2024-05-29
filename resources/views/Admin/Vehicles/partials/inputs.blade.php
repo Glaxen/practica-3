@@ -87,8 +87,8 @@
 </div>
 <div class="form-row">
     <div class="form-group col-12">
-        {!! Form::label('logo', 'Imagen del vehiculo',) !!}
-        <br><input type="file" name="logo" class="form-control" accept="image/*">
+        {!! Form::label('image', 'Imagen del vehiculo',) !!}
+        <br><input type="file" name="image" class="form-control" accept="image/*">
     </div>
 </div>
 

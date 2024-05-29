@@ -47,7 +47,7 @@
                     <tr>
                         <td>{{$vehicle->id}}</td>
                         <td>
-                            {{-- <img src="{{ asset($vehicle->logo) }}" alt="" width="120px"> --}}
+                            <img src="{{ asset($vehicle->image) }}" alt="" width="120px">
                         </td>
                         <td>{{$vehicle->name}}</td>
                         <td>{{$vehicle->brand}}</td>

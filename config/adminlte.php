@@ -342,6 +342,13 @@ return [
             // 'label' => 4,
             // 'label_color' => 'success',
         ],
+        [
+            'text' => 'Users',
+            'route' => 'admin.users.index',
+            'icon' => 'fas fa-users',
+            // 'label' => 4,
+            // 'label_color' => 'success',
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

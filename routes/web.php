@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\VehiclesController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\IndependentTables\BrandsController;
 use App\Http\Controllers\IndependentTables\BrandsmodelController;
@@ -38,4 +39,5 @@ Route::resource('/brandmodel', BrandsmodelController::class)->names('admin.brand
 Route::resource('/vehicles', VehiclesController::class)->names('admin.vehicles')->middleware('auth:sanctum');
 
 Route::resource('/usertypes', UsertypeController::class)->names('admin.usertypes')->middleware('auth:sanctum');
+Route::resource('/users', UsersController::class)->names('admin.users')->middleware('auth:sanctum');
 

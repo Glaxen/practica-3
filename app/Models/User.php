@@ -25,9 +25,26 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'lastname',
+        'DNI',
+        'birthdate',
         'email',
+        'license',
+        'address',
         'password',
+        'usertype_id',
+        'zone_id',
     ];
+
+    public function usertype()
+    {
+        return $this->belongsTo(\App\Models\Usertype::class);
+    }
+
+    /* public function zone()
+    {
+        return $this->belongsTo(\App\Models\Zone::class);
+    } */
 
     /**
      * The attributes that should be hidden for serialization.
@@ -57,5 +74,12 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'full_name',
     ];
+
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->lastname}";
+    }
 }

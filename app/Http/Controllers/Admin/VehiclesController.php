@@ -53,10 +53,18 @@ class VehiclesController extends Controller
      */
     public function store(Request $request)
     {
+        $messages = [
+            'plate.unique' => 'La matrícula ya está registrada.',
+            'code.unique' => 'El código ya está registrado.',
+            'name.unique' => 'El nombre ya está registrado.',
+        ];
+
         $request->validate([
-            'plate'=>'unique:Vehicles',
-            'code'=>'unique:Vehicles',
-        ]);
+            'plate' => 'unique:vehicles',
+            'code' => 'unique:vehicles',
+            'name' => 'unique:vehicles'
+        ], $messages);
+
         $status = 0;
         if (isset($request->status)) {
             $status=1;
@@ -88,6 +96,7 @@ class VehiclesController extends Controller
      */
     public function edit(string $id)
     {
+
         $vehicle=Vehicle::find($id);
         $brandId = $vehicle->brand_id;
         $brandfilter = Brand::where('id', $brandId)->pluck('name', 'id');
@@ -103,6 +112,18 @@ class VehiclesController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $messages = [
+            'plate.unique' => 'La matrícula ya está registrada.',
+            'code.unique' => 'El código ya está registrado.',
+            'name.unique' => 'El nombre ya está registrado.',
+        ];
+
+        $request->validate([
+            'plate' => 'unique:vehicles,plate,' . $id,
+            'code' => 'unique:vehicles,code,' . $id,
+            'name' => 'unique:vehicles,name,' . $id
+        ], $messages);
+
         $vehicle = Vehicle::find($id);
         $status = 0;
         if (isset($request->status)) {
@@ -110,6 +131,13 @@ class VehiclesController extends Controller
         }
         $vehicle->update($request->except('status','image') + ['status' =>$status]);
         if($request->image != ''){
+            $imagenAnterior = Vehicleimage::where('vehicle_id', $vehicle->id)
+                                ->where('profile', 1)
+                                ->first();
+            if ($imagenAnterior) {
+                $imagenAnterior->profile = 0;
+                $imagenAnterior->save();
+            }
             $imagen =  $request->file('image')->store('public/Vehicles_images/' . $vehicle->id);
             $urlImage = Storage::url($imagen);
             Vehicleimage::create([

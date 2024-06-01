@@ -335,6 +335,20 @@ return [
             // 'label' => 4,
             // 'label_color' => 'success',
         ],
+        [
+            'text' => 'User Types',
+            'route' => 'admin.usertypes.index',
+            'icon' => 'fas fa-person-booth',
+            // 'label' => 4,
+            // 'label_color' => 'success',
+        ],
+        [
+            'text' => 'Users',
+            'route' => 'admin.users.index',
+            'icon' => 'fas fa-users',
+            // 'label' => 4,
+            // 'label_color' => 'success',
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

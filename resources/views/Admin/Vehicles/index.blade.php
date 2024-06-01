@@ -7,7 +7,14 @@
 @stop
 
 @section('content')
-
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ $error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endforeach
+    @endif
   <!-- Modal -->
   <div class="modal fade" id="modalbrand" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">

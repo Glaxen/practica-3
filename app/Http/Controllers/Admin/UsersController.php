@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Usertype;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -18,8 +19,15 @@ class UsersController extends Controller
     // Muestra el formulario para crear un nuevo usuario
     public function create()
     {
-        return view('admin.users.create');
+        $usertypes = Usertype::all()->pluck('name', 'id');
+        return view('admin.users.create', compact('usertypes'));
     }
+
+    /* public function edit2(User $user)
+    {
+        $usertypes = Usertype::all()->pluck('name', 'id');
+        return view('admin.users.edit', compact('user', 'usertypes'));
+    } */
 
     // Guarda un nuevo usuario en la base de datos
     public function store(Request $request)
@@ -29,6 +37,7 @@ class UsersController extends Controller
             'lastname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'usertype_id' => 'required|exists:usertypes,id',
             // Agrega otras validaciones según sea necesario
         ]);
 
@@ -47,8 +56,10 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.users.update', compact('user'));
+        $usertypes = Usertype::all()->pluck('name', 'id');
+        return view('admin.users.update', compact('user', 'usertypes'));
     }
+
 
     // Actualiza un usuario en la base de datos
     public function update(Request $request, User $user)
@@ -57,6 +68,7 @@ class UsersController extends Controller
             'name' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'usertype_id' => 'required|exists:usertypes,id',
             // Asegúrate de excluir la validación de email único para el usuario actual
         ]);
 

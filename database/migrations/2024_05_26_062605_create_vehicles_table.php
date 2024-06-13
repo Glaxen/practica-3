@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('year',10)->nullable();
             $table->string('description')->nullable();
             $table->integer('status');
+            $table->integer('capacity');
             $table->unsignedBigInteger('brand_id');
             $table->unsignedBigInteger('model_id');
             $table->unsignedBigInteger('type_id');

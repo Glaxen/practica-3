@@ -19,14 +19,12 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->string('two_factor_secret')->nullable();
-            $table->text('two_factor_recovery_codes')->nullable();
             $table->string('remember_token')->nullable();
-            $table->foreignId('current_team_id')->nullable()->constrained('teams');
+            // $table->foreignId('current_team_id')->nullable()->constrained('teams');
             $table->string('profile_photo_path')->nullable();
+            $table->foreignId('usertype_id')->nullable()->constrained('usertypes');
+            $table->foreignId('zone_id')->nullable()->constrained('zones')->nullable();
             $table->timestamps();
-            $table->foreignId('usertype_id')->constrained('usertypes');
-            $table->foreignId('zone_id')->nullable()->constrained('zones');
         });
     }
 

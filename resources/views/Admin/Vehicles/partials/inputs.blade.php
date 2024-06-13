@@ -74,6 +74,12 @@
         'rows' => '4'
         ]) !!}
 </div>
+<div class="form-group">
+    {!! Form::label('capacity', 'Personas x vehiculo',) !!}
+    {!! Form::number('capacity', null, [
+        'class' => 'form-control',
+        ]) !!}
+</div>
 <p><b>Estado del vehiculo</b></p>
 <div class="form-check">
     {!! Form::checkbox('status', 1, 1, [

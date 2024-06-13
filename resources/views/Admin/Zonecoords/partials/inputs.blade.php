@@ -1,8 +1,8 @@
 <div class="form-row">
-    {!! Form::hidden('zone_id', null, []) !!}
+    {!! Form::hidden('zone_id', $zone->id, []) !!}
     <div class="form-group col-6">
         {!! Form::label('latitude','Latitud') !!}
-        {!! Form::text('latitude', null, [
+        {!! Form::text('latitude', optional($lastcoord->lat), [
             'class' => 'form-control',
             'placeholder'=>'latitud',
             'readonly',
@@ -11,7 +11,7 @@
     </div>
     <div class="form-group col-6">
         {!! Form::label('longitude','Longitud') !!}
-        {!! Form::text('longitude', null, [
+        {!! Form::text('longitude', optional($lastcoord->lng), [
             'class' => 'form-control',
             'placeholder'=>'Longitud',
             'readonly',
@@ -65,13 +65,54 @@
             title: "Coordenada test",
             draggable: true
         });
+        var perimeterCoords = @json($vertice);
+
+        var perimeterPolygon = new google.maps.Polygon({
+            paths: perimeterCoords,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35
+        });
+
+        perimeterPolygon.setMap(map);
 
         google.maps.event.addListener(marker, 'dragged', function (event) {
             var latLng = event.latLng;
             latInput.value = latLng.lat();
             lonInput.value = latLng.lng();
         });
+
+        var bounds = new google.maps.LatLngBounds();
+
+        // Obtener los límites (bounds) del polígono
+        perimeterPolygon.getPath().forEach(function(coord) {
+            bounds.extend(coord);
+        });
+
+        // Obtener el centro de los límites (bounds)
+        var centro = bounds.getCenter();
+
+        // Mover el mapa para centrarse en el centro del perímetro
+        map.panTo(centro);
+
+        //});
     }
+</script>
+<script>
+    var perimeterCoords = @json($vertice);
+        // Crea un objeto de polígono con los puntos del perímetro
+        var perimeterPolygon = new google.maps.Polygon({
+            paths: perimeterCoords,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35
+            });
+
+            perimeterPolygon.setMap(map);
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer>
 </script>

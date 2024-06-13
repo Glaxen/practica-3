@@ -38,7 +38,7 @@ class ZonecoordsController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**
@@ -47,7 +47,11 @@ class ZonecoordsController extends Controller
     public function edit(string $id)
     {
         $zone = Zone::find($id);
-        return view('Admin.Zonecoords.create');
+        $lastcoord = Zonecoords::select('latitude as lat','longitude as lng')
+            ->where('zone_id',$id)->latest()->first();
+        $vertices = Zonecoords::select('latitude as lat','longitude as lng')->where('zone_id',$id)->get();
+        return view('Admin.Zonecoords.create',compact('zone','lastcoord','vertices'));
+        //zonechords la latitud y longitud son double
     }
 
     /**

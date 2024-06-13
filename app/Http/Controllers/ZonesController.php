@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Zone;
+use App\Models\Zonecoords;
 use Illuminate\Http\Request;
 
 class ZonesController extends Controller
@@ -36,7 +37,9 @@ class ZonesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $zone = Zone::find($id);
+        $coords = Zonecoords::where('zone_id',$id);
+        return view('Admin.Zonecoords.create');
     }
 
     /**

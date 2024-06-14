@@ -1,0 +1,30 @@
+.main-sidebar,.navbar {
+    background-color: rgb(13, 78, 13) !important;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.navbar{
+    background-color: rgb(13, 78, 13)  !important;
+}
+.nav-header{
+    background-color: rgb(13, 78, 13)  !important;
+    color: rgb(255, 255, 255) !important;
+    border: 1px solid rgb(13, 78, 13);
+    border-radius: .25rem;
+    font-size: 13px !important;
+}
+.nav-link{
+    color: white !important;
+}
+.font-weight-light .fa-search{
+    color:white !important;
+}
+/* .nav-link.active{
+    background-color: rgba(173, 228, 255, 0.51) !important;
+} */
+.brand-text{
+    color:white !important;
+}
+.active{
+    background-color: rgba(173, 228, 255, 0.51) !important;
+}

@@ -22,9 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AdminController::class, 'index'])->middleware('auth:sanctum');
 
 Route::middleware([
     'auth:sanctum',

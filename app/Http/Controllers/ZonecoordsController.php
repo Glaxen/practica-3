@@ -21,7 +21,7 @@ class ZonecoordsController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -29,8 +29,16 @@ class ZonecoordsController extends Controller
      */
     public function store(Request $request)
     {
-        Zonecoords::create($request->all());
-        return redirect()->route('admin.zones.show',$request->zone_id)->with('success','coordenada agregada');
+        $markers = json_decode($request->input('markers'), true);
+        foreach ($markers as $coordenada) {
+            Zonecoords::create([
+                'latitude' =>floatval($coordenada['latitude']),
+                'longitude' =>floatval($coordenada['longitude']),
+                'zone_id'=> $request->zone_id,
+            ]);
+        }
+
+        return redirect()->route('admin.zones.show',$request->zone_id)->with('success','coordenadas agregadas');
     }
 
     /**
@@ -38,7 +46,13 @@ class ZonecoordsController extends Controller
      */
     public function show(string $id)
     {
+        //Por cuestiones de la vida y error humano el EDIT funciona como SHOW y el SHOW funcionara como EDIT
+        $zone = Zone::find($id);
+        $lastcoord = Zonecoords::select('latitude as lat','longitude as lng')
+            ->where('zone_id',$id)->latest()->first();
+        $vertices = Zonecoords::select('latitude as lat','longitude as lng','id')->where('zone_id',$id)->get();
 
+        return view('Admin.Zonecoords.modifyPerimeter',compact('zone','lastcoord','vertices'));
     }
 
     /**
@@ -46,10 +60,12 @@ class ZonecoordsController extends Controller
      */
     public function edit(string $id)
     {
+        //Por cuestiones de la vida y error humano el EDIT funciona como SHOW y el SHOW funcionara como EDIT
         $zone = Zone::find($id);
         $lastcoord = Zonecoords::select('latitude as lat','longitude as lng')
             ->where('zone_id',$id)->latest()->first();
         $vertices = Zonecoords::select('latitude as lat','longitude as lng')->where('zone_id',$id)->get();
+
         return view('Admin.Zonecoords.create',compact('zone','lastcoord','vertices'));
         //zonechords la latitud y longitud son double
     }
@@ -59,7 +75,27 @@ class ZonecoordsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
+        $allcoords = json_decode($request->input('markers'), true);
+        $zoneCoords = Zonecoords::where('zone_id', $id)->get();
+        $zoneCoordIds = $zoneCoords->pluck('id')->toArray();
+        $markerIds = array_column($allcoords, 'id');
+        $missingIds = array_filter($markerIds, function($id) use ($zoneCoordIds) {
+            return !in_array($id, $zoneCoordIds);
+        });
+        if (!empty($missingIds)) {
+            foreach ($missingIds as $missingId) {
+                Zonecoords::find($missingId)->delete();
+            }
+        }
+        
+        foreach ($allcoords as $c) {
+            $updateCoord = Zonecoords::find($c['id']);
+            $updateCoord->update([
+                'latitude'=> $c['latitude'],
+                'longitude'=> $c['longitude']
+            ]);
+        }
+        return redirect()->route('admin.zones.show',$id);
     }
 
     /**

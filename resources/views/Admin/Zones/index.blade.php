@@ -26,39 +26,42 @@
 <div class="p-2">
     <div class="card">
         <div class="card-body">
-            <button id="btncreatebrand" class="btn btn-success float-right btncreate">
+            <button id="btncreatezone" class="btn btn-success float-right btncreate">
                 <i class="fas fa-plus mr-1"></i>Nuevo
             </button>
             <table class="datatable table text-center" id="brandstrable">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>LOGO</th>
+                        <th>ID</th>
                         <th>NOMBRE</th>
+                        <th>AREA</th>
                         <th>DESCRIPCION</th>
                         <th>ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($brands as $brand)
+                    @foreach ($zones as $zone)
                     <tr>
-                        <td>{{$brand->id}}</td>
-                        <td>
-                            <img src="{{ asset($brand->logo) }}" alt="" width="120px">
-                        </td>
-                        <td>{{$brand->name}}</td>
-                        <td>{{$brand->description}}</td>
+                        <td>{{ $zone->id }}</td>
+                        <td>{{ $zone->name }}</td>
+                        <td>{{ $zone->area }}</td>
+                        <td>{{ $zone->description }}</td>
                         <td>
                             <div class="row">
+                                <div class="col-4">
+                                    <a class="btn btn-secondary" href="{{ route('admin.zones.show',$zone->id ) }}">
+                                        <i class="fas fa-map"></i>
+                                    </a>
+                                </div>
                                 {{-- botton de editar --}}
-                                <div class="col-6">
-                                    <button id="{{$brand->id}}" type="button" class="btneditbrand btn btn-primary">
+                                <div class="col-4">
+                                    <button id="{{$zone->id}}" type="button" class="btneditzone btn btn-primary">
                                         <i class="fas fa-solid fa-pen"></i>
                                     </button>
                                 </div>
                                 {{-- boton de borrar  --}}
-                                <div class="col-6">
-                                    <form class="frmDelete" action="{{ route('admin.brands.destroy', $brand->id) }}" method="post">
+                                <div class="col-4">
+                                    <form class="frmDelete" action="{{ route('admin.zones.destroy', $zone->id) }}" method="post">
                                         @method('delete')
                                         @csrf
                                         <button type="submit" class="btn btn-danger"><i class="fas fa-solid fa-trash"></i></button>
@@ -76,8 +79,7 @@
 @stop
 
 @section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+<link rel="stylesheet" href="/css/admin_custom.css">
     <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <!-- SweetAlert2 CSS -->
@@ -99,9 +101,9 @@
                 "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
             }
     });
-    $('#btncreatebrand').click(function() {
+    $('#btncreatezone').click(function() {
         $.ajax({
-            url:"{{ route('admin.brands.create') }}",
+            url:"{{ route('admin.zones.create') }}",
             type: "GET",
             success: function (response) {
                 $('#modalbrand .modal-body').html(response);
@@ -113,14 +115,14 @@
         });
     });
 
-    $('.btneditbrand').click(function() {
+    $('.btneditzone').click(function() {
         var id = $(this).attr('id');
         $.ajax({
-            url:"{{ route('admin.brands.edit','_id') }}".replace('_id',id),
+            url:"{{ route('admin.zones.edit','_id') }}".replace('_id',id),
             type: "GET",
             success: function (response) {
+                $('#modalbrand #exampleModalLabel').html('Modificar zona');
                 $('#modalbrand .modal-body').html(response);
-                $('#modalbrand #exampleModalLabel').html('Actualizar marca');
                 $('#modalbrand').modal('show');
             },
             error: function(xhr, status, error) {
@@ -135,7 +137,7 @@
             event.preventDefault();
             Swal.fire({
                     title: "Estas seguro?",
-                    text: "Estas seguro que deseas eliminar la categoria?",
+                    text: "Estas seguro que deseas eliminar la zona?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",

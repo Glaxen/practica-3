@@ -46,18 +46,21 @@
                         <td>{{ $usertype->description }}</td>
                         <td>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col">
                                     <button id="{{ $usertype->id }}" type="button" class="btnEditUsertype btn btn-primary">
                                         <i class="fas fa-solid fa-pen"></i>
                                     </button>
                                 </div>
-                                <div class="col-6">
-                                    <form class="frmDelete" action="{{ route('admin.usertypes.destroy', $usertype->id) }}" method="post">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger"><i class="fas fa-solid fa-trash"></i></button>
-                                    </form>
-                                </div>
+                                @if ($usertype->id > 5)
+                                    <div class="col-6">
+
+                                        <form class="frmDelete" action="{{ route('admin.usertypes.destroy', $usertype->id) }}" method="post">
+                                            @method('delete')
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger"><i class="fas fa-solid fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -70,6 +73,7 @@
 @stop
 
 @section('css')
+    <link rel="stylesheet" href="/css/admin_custom.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @stop

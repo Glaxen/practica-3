@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Route;
+use App\Models\Routezone;
+use App\Models\User;
 use App\Models\Zone;
 use App\Models\Zonecoords;
 use Illuminate\Http\Request;
@@ -13,7 +16,8 @@ class ZonesController extends Controller
      */
     public function index()
     {
-        //
+        $zones = Zone::all();
+        return view('Admin.Zones.index',compact('zones'));
     }
 
     /**
@@ -21,7 +25,7 @@ class ZonesController extends Controller
      */
     public function create()
     {
-        //
+        return view('Admin.Zones.create');
     }
 
     /**
@@ -29,7 +33,8 @@ class ZonesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Zone::create($request->all());
+        return redirect()->route('admin.zones.index')->with('success','zona agregada');;
     }
 
     /**
@@ -38,8 +43,8 @@ class ZonesController extends Controller
     public function show(string $id)
     {
         $zone = Zone::find($id);
-        $coords = Zonecoords::where('zone_id',$id);
-        return view('Admin.Zonecoords.create');
+        $coords = Zonecoords::where('zone_id',$zone->id)->get();
+        return view('Admin.Zones.show',compact('zone','coords'));
     }
 
     /**
@@ -47,7 +52,8 @@ class ZonesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $zone = Zone::find($id);
+        return view('Admin.Zones.edit',compact('zone'));
     }
 
     /**
@@ -55,7 +61,9 @@ class ZonesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $zone = Zone::find($id);
+        $zone->update($request->all());
+        return redirect()->route('admin.zones.index');
     }
 
     /**
@@ -63,6 +71,19 @@ class ZonesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //La zona no se puede borrar sihay usuarios o rutas asignadas a esa zona
+        $zone = Zone::find($id);
+        $userzones = User::where('zone_id',$zone->id)->get();
+        $rutaszonas = Routezone::where('zone_id',$zone->id)->get();
+        if($userzones->isNotEmpty() || $rutaszonas->isNotEmpty()){
+            return redirect()->route('admin.zones.index')->with('error','No se puede eliminar la zona debido a que hay usuarios y rutas asosciadas');
+        }else{
+            $zonecoords = Zonecoords::where('zone_id',$zone->id)->get();
+            foreach($zonecoords as $c){
+                $c->delete();
+            }
+            $zone->delete();
+            return redirect()->route('admin.zones.index')->with('success','Zona eliminada con exito');
+        }
     }
 }

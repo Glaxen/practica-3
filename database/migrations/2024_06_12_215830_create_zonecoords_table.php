@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('zonecoords', function (Blueprint $table) {
             $table->id();
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->decimal('latitude', 10, 8);
+            $table->decimal('longitude', 10, 8);
             $table->unsignedBigInteger('zone_id');
             $table->foreign('zone_id')->references('id')->on('zones');
             $table->timestamps();

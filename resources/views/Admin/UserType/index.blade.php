@@ -46,18 +46,21 @@
                         <td>{{ $usertype->description }}</td>
                         <td>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col">
                                     <button id="{{ $usertype->id }}" type="button" class="btnEditUsertype btn btn-primary">
                                         <i class="fas fa-solid fa-pen"></i>
                                     </button>
                                 </div>
-                                <div class="col-6">
-                                    <form class="frmDelete" action="{{ route('admin.usertypes.destroy', $usertype->id) }}" method="post">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger"><i class="fas fa-solid fa-trash"></i></button>
-                                    </form>
-                                </div>
+                                @if ($usertype->id > 5)
+                                    <div class="col-6">
+
+                                        <form class="frmDelete" action="{{ route('admin.usertypes.destroy', $usertype->id) }}" method="post">
+                                            @method('delete')
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger"><i class="fas fa-solid fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                @endif
                             </div>
                         </td>
                     </tr>

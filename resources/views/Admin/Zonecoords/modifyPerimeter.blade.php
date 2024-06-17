@@ -1,9 +1,9 @@
-{!! Form::open(['method' => 'POST', 'route' => 'admin.zonecoords.store', 'class' => 'form-horizontal', 'id'=>'coordenatesForm']) !!}
+{!! Form::model($zone,['method' => 'PUT','route'=>['admin.zonecoords.update', $zone], 'class' => 'form-horizontal', 'id'=>'coordenatesForm']) !!}
 @include('Admin.Zonecoords.partials.inputs')
 <div class="btn-group d-flex mb-3 pt-2">
     <input type="hidden" name="markers" id="markers">
     <button class="btn btn-success m-2" type="sumbit">
-        <i class="fas fa-save"></i>Agregar
+        <i class="fas fa-save"></i>Guardar
     </button>
     <button type="button" class="btn btn-danger m-2" data-bs-dismiss="modal"><i class="fas fa-window-close"></i>Regresar</button>
 </div>
@@ -13,6 +13,7 @@
     var lonInput = document.getElementById('longitude');
     var map;
     var markers = [];
+    var idmarkers = [];
     function initMap() {
         var lat = parseFloat(latInput.value);
         var lng = parseFloat(lonInput.value);
@@ -32,7 +33,6 @@
             displayMap(lat, lng);
         }
     }
-
     function addMarker(location) {
             var marker = new google.maps.Marker({
                 position: location,
@@ -72,33 +72,43 @@
             map: map,
             draggable: true
         });
-        google.maps.event.addListener(marker, 'dragged', function (event) {
-            var latLng = event.latLng;
-            latInput.value = latLng.lat();
-            lonInput.value = latLng.lng();
-        });
-        markers.push(marker);
+        // map.addListener('click', function(event) {
+        //         addMarker(event.latLng);
+        // })
+        // google.maps.event.addListener(marker, 'dragged', function (event) {
+        //     var latLng = event.latLng;
+        //     latInput.value = latLng.lat();
+        //     lonInput.value = latLng.lng();
+        // });
+        // markers.push(marker);
 
-        map.addListener('click', function(event) {
-                addMarker(event.latLng);
-        });
+        // map.addListener('click', function(event) {
+        //         removeMarker(event.latLng);
+        // });
 
         var perimeterCoords = @json($vertices);
         var convertedCoords = perimeterCoords.map(function(coord) {
             return {
                 lat: parseFloat(coord.lat),
-                lng: parseFloat(coord.lng)
+                lng: parseFloat(coord.lng),
+                id: coord.id
             };
         });
+        console.log(convertedCoords);
         var colors = ['#FF0000', '#ff7433', '#0000FF', '#FFFF00', '#33ddff ', '#00FFFF'];
-        var color = colors[Math.random()*4 % colors.length];
+        var color = colors[Math.random() % colors.length];
+
+        convertedCoords.forEach(coordenate => {
+            addMarker(coordenate);
+            idmarkers.push(coordenate.id)
+        });
 
         var perimeterPolygon = new google.maps.Polygon({
             paths: convertedCoords,
-            strokeColor: color,
+            strokeColor: '#ff7433',
             strokeOpacity: 0.8,
             strokeWeight: 2,
-            fillColor: color,
+            fillColor: '#ff7433',
             fillOpacity: 0.35
         });
 
@@ -122,13 +132,13 @@
 </script>
 <script>
 document.getElementById('coordenatesForm').addEventListener('submit', function(event) {
-    var markerData = markers.map(marker => {
+    var markerData = markers.map((marker,index) => {
         return {
             latitude: marker.getPosition().lat(),
-            longitude: marker.getPosition().lng()
+            longitude: marker.getPosition().lng(),
+            id: idmarkers[index]
         };
     });
-
     document.getElementById('markers').value = JSON.stringify(markerData);
 });
 </script>

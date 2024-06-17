@@ -55,7 +55,7 @@
                                 </div>
                                 {{-- botton de editar --}}
                                 <div class="col-4">
-                                    <button id="{{$zone->id}}" type="button" class="btneditbrand btn btn-primary">
+                                    <button id="{{$zone->id}}" type="button" class="btneditzone btn btn-primary">
                                         <i class="fas fa-solid fa-pen"></i>
                                     </button>
                                 </div>
@@ -115,14 +115,14 @@
         });
     });
 
-    $('.btneditbrand').click(function() {
+    $('.btneditzone').click(function() {
         var id = $(this).attr('id');
         $.ajax({
             url:"{{ route('admin.zones.edit','_id') }}".replace('_id',id),
             type: "GET",
             success: function (response) {
+                $('#modalbrand #exampleModalLabel').html('Modificar zona');
                 $('#modalbrand .modal-body').html(response);
-                $('#modalbrand #exampleModalLabel').html('Actualizar marca');
                 $('#modalbrand').modal('show');
             },
             error: function(xhr, status, error) {
@@ -137,7 +137,7 @@
             event.preventDefault();
             Swal.fire({
                     title: "Estas seguro?",
-                    text: "Estas seguro que deseas eliminar la categoria?",
+                    text: "Estas seguro que deseas eliminar la zona?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",

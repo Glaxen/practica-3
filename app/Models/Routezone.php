@@ -9,6 +9,8 @@ class Routezone extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     // Especificar la tabla si no sigue la convención de nombres de Laravel
     protected $table = 'routezones';
 
@@ -33,4 +35,5 @@ class Routezone extends Model
     {
         return $this->belongsTo(\App\Models\Zone::class, 'zone_id');
     }
+
 }

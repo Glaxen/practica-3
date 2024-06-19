@@ -26,6 +26,11 @@
 <div class="p-2">
     <div class="card">
         <div class="card-body">
+            <div class="">
+                <button id="btncreatebrand" class="btn btn-success float-right btncreate">
+                    <i class="fas fa-plus mr-1"></i>Nuevo
+                </button>
+            </div>
             <table class="datatable table text-center" id="brandstrable">
                 <thead>
                     <tr>
@@ -51,13 +56,8 @@
                         </td>
                         <td>
                             <div class="row">
-                                <div class="col-6">
-                                    <button id="btncreatebrand" class="btn btn-success float-right btncreate">
-                                        <i class="fas fa-plus mr-1"></i>Nuevo
-                                    </button>
-                                </div>
                                 {{-- botton de editar --}}
-                                <div class="col-6">
+                                <div class="col">
                                     <button id="{{$vo->id}}" type="button" class="btneditbrand btn btn-primary">
                                         <i class="fas fa-solid fa-pen"></i>
                                     </button>

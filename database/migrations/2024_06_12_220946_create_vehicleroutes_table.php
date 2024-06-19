@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('vehicleroutes', function (Blueprint $table) {
             $table->id();
             $table->date('date_route');
-            $table->string('description');
+            $table->time('hour_route');
+            $table->string('description')->nullable();
             $table->unsignedBigInteger('routestatus_id');
             $table->unsignedBigInteger('vehicle_id');
             $table->unsignedBigInteger('route_id');

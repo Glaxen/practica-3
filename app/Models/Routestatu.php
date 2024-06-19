@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Routezone extends Model
+class Routestatu extends Model
 {
     use HasFactory;
     protected $guarded = [];

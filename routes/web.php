@@ -9,7 +9,10 @@ use App\Http\Controllers\IndependentTables\BrandsmodelController;
 use App\Http\Controllers\IndependentTables\UsertypeController;
 use App\Http\Controllers\ZonecoordsController;
 use App\Http\Controllers\ZonesController;
+use App\Http\Controllers\Admin\RouteController;
+use App\Http\Controllers\Admin\RoutezoneController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -48,3 +51,8 @@ Route::resource('/vehicleOccupants', VehicleoccupantsController::class)->names('
 
 Route::resource('/zones', ZonesController::class)->names('admin.zones')->middleware('auth:sanctum');
 Route::resource('/zonescoords',ZonecoordsController::class)->names('admin.zonecoords')->middleware('auth:sanctum');
+
+Route::resource('/routes', RouteController::class)->names('admin.routes');
+Route::resource('/routezones', RoutezoneController::class)->names('admin.routezones');
+
+

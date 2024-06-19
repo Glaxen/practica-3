@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('routes', function (Blueprint $table) {
             $table->id();
             $table->string('name',100);
-            $table->string('latitud_start');
+            $table->string('latitude_start');
             $table->string('longitude_start');
             $table->string('latitude_end');
             $table->string('longitude_end');

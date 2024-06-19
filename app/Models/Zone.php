@@ -9,4 +9,9 @@ class Zone extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function zonecoords()
+    {
+        return $this->hasMany(Zonecoords::class);
+    }
 }

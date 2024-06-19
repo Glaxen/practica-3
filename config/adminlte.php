@@ -359,6 +359,11 @@ return [
             'route' => 'admin.zones.index',
             'icon' => 'fas fa-chart-area',
         ],
+        [
+            'text' => 'Rutas',
+            'route' => 'admin.routes.index',
+            'icon' => 'fas fa-chart-area',
+        ],
         // ['header' => 'account_settings'],
         // [
         //     'text' => 'profile',

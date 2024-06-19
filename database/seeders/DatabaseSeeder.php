@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             VehicletypesSeeder::class,
             VehiclecolorsSeeder::class,
             UsertypesSeeder::class,
+            RoutestatuSeeder::class,
         ]);
     }
 }

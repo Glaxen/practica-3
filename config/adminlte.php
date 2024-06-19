@@ -366,9 +366,16 @@ return [
             'icon' => 'fas fa-chart-area',
         ],
         [
+
             'text' => 'Programacion de Rutas',
             'route' => 'admin.vehicleroute.index',
             'icon' => 'fas fa-calendar-alt',
+        ],
+        [
+            'text' => 'Rutas',
+            'route' => 'admin.routes.index',
+            'icon' => 'fas fa-chart-area',
+
         ],
         // ['header' => 'account_settings'],
         // [

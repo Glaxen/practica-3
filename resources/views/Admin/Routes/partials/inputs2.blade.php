@@ -100,6 +100,8 @@
                 $('input[name="longitude_end"]').val(endLong);
             }
 
+            drawRoute();
+
             // Agregar nuevos marcadores movibles para nueva ruta
             map.on('click', function(e) {
                 if (markers.length >= 2) {

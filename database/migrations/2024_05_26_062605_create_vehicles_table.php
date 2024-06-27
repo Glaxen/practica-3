@@ -27,7 +27,7 @@ return new class extends Migration
             $table->foreign('brand_id')->references('id')->on('brands');
             $table->foreign('model_id')->references('id')->on('brandsmodels');
             $table->foreign('type_id')->references('id')->on('vehicletypes');
-            $table->foreign('color_id')->references('id')->on('vehicleColors');
+            $table->foreign('color_id')->references('id')->on('vehiclecolors');
             $table->timestamps();
         });
     }

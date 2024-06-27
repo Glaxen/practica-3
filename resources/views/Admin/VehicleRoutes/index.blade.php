@@ -32,8 +32,14 @@
                 <i class="fas fa-filter"></i>&nbsp;Filtrar
             </button>
             <button id="" type="button" class="float-right btn btn-primary multiple_edit mx-2">
-                <i class="fas fa-solid fa-pen"></i>&nbsp;Editar multiples registros
+                <i class="fas fa-solid fa-pen"></i>&nbsp;Edicion multiple
             </button>
+            <div class="float-right mx-2">
+                <input id='idedit' name="idedit" class="form-input" type="number" style="width: 60px">
+                <button type="submit" class="btneditbrand2 btn btn-primary">
+                        <i class="fas fa-solid fa-pen"></i>
+                </button>
+            </div>
 
             <table class="datatable table text-center" id="brandstrable">
                 <thead>
@@ -123,19 +129,25 @@
 <script>
     $('#brandstrable').DataTable({
         columns: [
-                { data: 'id' },
-                { data: 'vehiculo' },
-                { data: 'route' },
-                { data: 'fecha' },
-                { data: 'hora' },
-                { data: 'status' },
-                { data: 'description' },
-                {
-                    data: null,
-                    defaultContent: '<button class="btn btn-primary">Editar</button>',
-                    orderable: false
+            { data: 'id' },
+            { data: 'vehiculo' },
+            { data: 'route' },
+            { data: 'fecha' },
+            { data: 'hora' },
+            { data: 'status' },
+            { data: 'description' },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `
+                        <div class="col">
+                            <button id="${data.id}" type="button" class="btneditbrand btn btn-primary">
+                                <i class="fas fa-solid fa-pen"></i>
+                            </button>
+                        </div>`;
                 }
-            ],
+            }
+        ],
         'language': {
                 //si no les funciona usen este archivo de manera local
                 // "url":"/storage/Spanish.json",
@@ -158,6 +170,22 @@
 
     $('.btneditbrand').click(function() {
         var id = $(this).attr('id');
+        $.ajax({
+            url:"{{ route('admin.vehicleroute.edit','_id') }}".replace('_id',id),
+            type: "GET",
+            success: function (response) {
+                $('#modalbrand .modal-body').html(response);
+                $('#modalbrand #exampleModalLabel').html('Actualizar ruta programada');
+                $('#modalbrand').modal('show');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error en la solicitud AJAX:', error);
+            }
+        });
+    });
+
+    $('.btneditbrand2').click(function() {
+        var id = $('#idedit').val();
         $.ajax({
             url:"{{ route('admin.vehicleroute.edit','_id') }}".replace('_id',id),
             type: "GET",

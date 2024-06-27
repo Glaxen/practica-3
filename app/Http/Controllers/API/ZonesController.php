@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Zone;
 use Illuminate\Http\Request;
 
 class ZonesController extends Controller
@@ -12,7 +13,8 @@ class ZonesController extends Controller
      */
     public function index()
     {
-        //
+        $zones=Zone::pluck("name","id");
+        return response()->json($zones);
     }
 
     /**

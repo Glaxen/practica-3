@@ -138,50 +138,42 @@ class VehiclerouteController extends Controller
 
     public function filtertable(Request $request){
         // Validar los inputs recibidos si es necesario
-        $request->validate([
-            'vehicle_id' => 'nullable|integer',
-            'route_id' => 'nullable|integer',
-            'fechainicio' => 'nullable|date',
-            'fechafin' => 'nullable|date',
-        ]);
+        $vehicle_id = $request->input('vehicle_id');
+        $route_id = $request->input('route_id');
+        $fechainicio = $request->input('fechainicio');
+        $fechafin = $request->input('fechafin');
 
-        // Iniciar la consulta con una condición siempre verdadera para facilitar concatenación
-        $query = "
-        SELECT vr.id as id, v.name as vehiculo, r.name as route, vr.date_route as fecha, rs.name as status, vr.description as description, vr.hour_route as hora
-        FROM vehicleroutes as vr
-        INNER JOIN routes as r on vr.route_id = r.id
-        INNER JOIN vehicles as v on vr.vehicle_id = v.id
-        INNER JOIN routestatus as rs on vr.routestatus_id = rs.id
-        WHERE 1=1";
-
-        // Array para almacenar los parámetros de la consulta
         $params = [];
+        $query = "
+            SELECT vr.id as id, v.name as vehiculo, r.name as route, vr.date_route as fecha, rs.name as status, vr.description as description, vr.hour_route as hora
+            FROM vehicleroutes as vr
+            INNER JOIN routes as r on vr.route_id = r.id
+            INNER JOIN vehicles as v on vr.vehicle_id = v.id
+            INNER JOIN routestatus as rs on vr.routestatus_id = rs.id
+            WHERE 1=1";
 
-        // Verificar cada variable y agregar el filtro a la consulta si no es nula
-        if (!is_null($request->vehicle_id)) {
-            $query .= " AND v.id = ?";
-            $params[] = $request->vehicle_id;
+        if ($vehicle_id) {
+            $query .= " AND vr.vehicle_id = :vehicle_id";
+            $params['vehicle_id'] = $vehicle_id;
         }
 
-        if (!is_null($request->route_id)) {
-            $query .= " AND r.id = ?";
-            $params[] = $request->route_id;
+        if ($route_id) {
+            $query .= " AND vr.route_id = :route_id";
+            $params['route_id'] = $route_id;
         }
 
-        if (!is_null($request->fechainicio)) {
-            $query .= " AND vr.date_route >= ?";
-            $params[] = $request->fechainicio;
+        if ($fechainicio) {
+            $query .= " AND vr.date_route >= :fechainicio";
+            $params['fechainicio'] = $fechainicio;
         }
 
-        if (!is_null($request->fechafin)) {
-            $query .= " AND vr.date_route <= ?";
-            $params[] = $request->fechafin;
+        if ($fechafin) {
+            $query .= " AND vr.date_route <= :fechafin";
+            $params['fechafin'] = $fechafin;
         }
 
-        // Ejecutar la consulta con los parámetros
         $vehicleroutes = DB::select($query, $params);
 
-        // Retornar los datos en formato JSON
         return response()->json(['data' => $vehicleroutes]);
     }
 }

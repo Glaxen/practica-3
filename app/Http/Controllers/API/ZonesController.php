@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Zone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ZonesController extends Controller
 {
@@ -63,5 +64,25 @@ class ZonesController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function allroutes2(Request $request)
+    {
+        $user = Auth::user();
+        // Verificar si el usuario existe
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no autenticado'], 200);
+        }
+
+        // Verificar si el usuario tiene una zona asociada
+        if (!$user->zone) {
+            return response()->json(['message' => 'Zona no encontrada para el usuario'], 200);
+        }
+
+        // Obtener las rutas asociadas a la zona del usuario
+        $routes = $user->zone->routes()->select([
+            'id', 'latitude_start', 'longitude_start', 'latitude_end', 'longitude_end'
+        ])->get();
+
+        return response()->json($routes);
     }
 }

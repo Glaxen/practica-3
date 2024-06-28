@@ -1,13 +1,13 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Home')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Panel principal</h1>
 @stop
 
 @section('content')
-    <p>Welcome to this beautiful admin panel.</p>
+    <p>Bienvennido al modulo web de la aplicación gestora de residuos de manera ecológica</p>
 @stop
 
 @section('css')

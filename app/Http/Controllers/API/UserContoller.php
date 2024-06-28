@@ -14,8 +14,12 @@ class UserContoller extends Controller
         $credencioalles = $request->only('email','password');
         if (Auth::attempt($credencioalles)){
             $user = Auth::user();
-            $token = $user->createToken('api-token')->plainTextToken;
-            return response()->json(['token'=>$token,'user'=>$user]);
+            if ($user->usertype_id ==2){
+                $token = $user->createToken('api-token')->plainTextToken;
+                return response()->json(['token'=>$token,'user'=>$user]);
+            }else{
+                return response()->json(['error'=>'Usted no esta registrado como ciudadano']);
+            }
         }else{
             return response()->json(['error'=>'No autorizado']);
         }
@@ -32,7 +36,7 @@ class UserContoller extends Controller
             'lastname' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8',
-            'dni' => 'required|string|max:20|unique:users,dni',
+            'DNI' => 'required|string|max:20|unique:users,dni',
         ];
 
         $messages = [
@@ -43,8 +47,8 @@ class UserContoller extends Controller
             'email.unique' => 'El correo electrónico ya está registrado.',
             'password.required' => 'El campo contraseña es obligatorio.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-            'dni.required' => 'El campo DNI es obligatorio.',
-            'dni.unique' => 'El DNI ya está registrado.',
+            'DNI.required' => 'El campo DNI es obligatorio.',
+            'DNI.unique' => 'El DNI ya está registrado.',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -54,12 +58,13 @@ class UserContoller extends Controller
             return response()->json([
                 'message' => 'Los datos proporcionados no son válidos.',
                 'errors' => $validator->errors(),
-            ], 422);
+            ]);
         }
 
-            $user = new User($request->all());
-            $user->password = bcrypt($request->password);
-            $user->save();
+        $user = new User($request->all());
+        $user->password = bcrypt($request->password);
+        $user->usertype_id = 2;
+        $user->save();
         return response()->json(['message'=>'usuario creado con exito']);
 
 

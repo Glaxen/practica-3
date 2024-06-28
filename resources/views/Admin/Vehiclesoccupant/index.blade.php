@@ -126,6 +126,8 @@
             event.preventDefault();
 
             var numOccupants = $('#listaoccupants').children().length;
+            var nombres_registrados = $('#listaoccupants .list-group-item');
+            var userIds = [];
             var capacities = JSON.parse($('#capacitiesInput').val());
 
             var userName = $('#selectmodel option:selected').text();
@@ -136,22 +138,34 @@
             var vehicleId = $('#vehicleselect').val()
 
             var maxOccupants = capacities[vehicleId];
-            if (numOccupants >= maxOccupants) {
+            var key = Object.keys(capacities)[0];
+
+            if (numOccupants >= maxOccupants || numOccupants>=capacities[key]) {
                 alert('Se ha alcanzado el límite máximo de ocupantes.');
                 return;
             }
 
+            nombres_registrados.each(function() {
+                var inputValue = $(this).find('input[type="hidden"]').val();
+                var userId = inputValue.split('_')[2];
+                userIds.push(userId);
+            });
+            console.log(userIds);
             if (userName && userType) {
-                var newOccupant = `
+                if (! userIds.includes(userId)){
+                    var newOccupant = `
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             ${userName}
                             <span class="badge badge-primary badge-pill">${userType}</span>
                             <a href=""><span class="badge badge-danger badge-pill"><i class="fas fa-minus"></i></span></a>
                             <input type="hidden" name="occupants[]" value="${vehicleId}_${userTypeId}_${userId}">
-                        </li>
-                `;
+                            </li>
+                    `;
 
-                $('#listaoccupants').append(newOccupant);
+                    $('#listaoccupants').append(newOccupant);
+                }else{
+                    alert('este usuario ya ha sido asignado');
+                }
             } else {
                 alert('Por favor, seleccione un usuario y un tipo de usuario.');
             }

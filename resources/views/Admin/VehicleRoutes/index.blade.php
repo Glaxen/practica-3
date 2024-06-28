@@ -34,12 +34,12 @@
             <button id="" type="button" class="float-right btn btn-primary multiple_edit mx-2">
                 <i class="fas fa-solid fa-pen"></i>&nbsp;Edicion multiple
             </button>
-            <div class="float-right mx-2">
+            {{-- <div class="float-right mx-2">
                 <input id='idedit' name="idedit" class="form-input" type="number" style="width: 60px">
                 <button type="submit" class="btneditbrand2 btn btn-primary">
                         <i class="fas fa-solid fa-pen"></i>
                 </button>
-            </div>
+            </div> --}}
 
             <table class="datatable table text-center" id="brandstrable">
                 <thead>
@@ -83,7 +83,7 @@
                         <th width="10%">HORA PROGRAMADA</th>
                         <th scope="col" width="20%">STATUS</th>
                         <th scope="col">COMENTARIOS</th>
-                        <th>Editar</th>
+                        {{-- <th>Editar</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -96,13 +96,13 @@
                         <td>{{$vr->hora}}</td>
                         <td>{{$vr->status}}</td>
                         <td>{{$vr->description}}</td>
-                        <td>
+                        {{-- <td>
                             <div class="col">
                                 <button id="{{$vr->id}}" type="button" class="btneditbrand btn btn-primary">
                                     <i class="fas fa-solid fa-pen"></i>
                                 </button>
                             </div>
-                        </td>
+                        </td> --}}
                     </tr>
                     @endforeach
                 </tbody>
@@ -136,7 +136,7 @@
             { data: 'hora' },
             { data: 'status' },
             { data: 'description' },
-            {
+            /*{
                 data: null,
                 render: function (data, type, row) {
                     return `
@@ -146,7 +146,7 @@
                             </button>
                         </div>`;
                 }
-            }
+            }*/
         ],
         'language': {
                 //si no les funciona usen este archivo de manera local

@@ -14,8 +14,12 @@ class UserContoller extends Controller
         $credencioalles = $request->only('email','password');
         if (Auth::attempt($credencioalles)){
             $user = Auth::user();
-            $token = $user->createToken('api-token')->plainTextToken;
-            return response()->json(['token'=>$token,'user'=>$user]);
+            if ($user->usertype_id ==2){
+                $token = $user->createToken('api-token')->plainTextToken;
+                return response()->json(['token'=>$token,'user'=>$user]);
+            }else{
+                return response()->json(['error'=>'Usted no esta registrado como ciudadano']);
+            }
         }else{
             return response()->json(['error'=>'No autorizado']);
         }
@@ -59,6 +63,7 @@ class UserContoller extends Controller
 
         $user = new User($request->all());
         $user->password = bcrypt($request->password);
+        $user->usertype_id = 2;
         $user->save();
         return response()->json(['message'=>'usuario creado con exito']);
 

@@ -66,7 +66,6 @@ class ZonesController extends Controller
     {
         //
     }
-
     public function allroutes2(Request $request)
     {
         $user = Auth::user();

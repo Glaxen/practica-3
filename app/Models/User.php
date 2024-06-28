@@ -41,10 +41,10 @@ class User extends Authenticatable
         return $this->belongsTo(\App\Models\Usertype::class);
     }
 
-    /* public function zone()
+    public function zone()
     {
         return $this->belongsTo(\App\Models\Zone::class);
-    } */
+    }
 
     /**
      * The attributes that should be hidden for serialization.

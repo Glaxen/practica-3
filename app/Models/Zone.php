@@ -14,4 +14,9 @@ class Zone extends Model
     {
         return $this->hasMany(Zonecoords::class);
     }
+
+    public function routes()
+    {
+        return $this->belongsToMany(Route::class, 'routezones', 'zone_id', 'route_id');
+    }
 }

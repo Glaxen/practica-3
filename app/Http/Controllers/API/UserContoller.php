@@ -32,7 +32,7 @@ class UserContoller extends Controller
             'lastname' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8',
-            'dni' => 'required|string|max:20|unique:users,dni',
+            'DNI' => 'required|string|max:20|unique:users,dni',
         ];
 
         $messages = [
@@ -43,8 +43,8 @@ class UserContoller extends Controller
             'email.unique' => 'El correo electrónico ya está registrado.',
             'password.required' => 'El campo contraseña es obligatorio.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-            'dni.required' => 'El campo DNI es obligatorio.',
-            'dni.unique' => 'El DNI ya está registrado.',
+            'DNI.required' => 'El campo DNI es obligatorio.',
+            'DNI.unique' => 'El DNI ya está registrado.',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -54,14 +54,13 @@ class UserContoller extends Controller
             return response()->json([
                 'message' => 'Los datos proporcionados no son válidos.',
                 'errors' => $validator->errors(),
-            ], 422);
+            ]);
         }
 
-            $user = new User($request->all());
-            $user->password = bcrypt($request->password);
-            $user->save();
+        $user = new User($request->all());
+        $user->password = bcrypt($request->password);
+        $user->save();
         return response()->json(['message'=>'usuario creado con exito']);
-
 
     }
 }

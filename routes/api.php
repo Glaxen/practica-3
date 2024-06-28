@@ -23,5 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::post('api/login', [UserController::class,'login']);
 Route::post('/login',[UserContoller::class, 'login']);
 Route::get('/askzones',[ZonesController::class, 'index']);
+Route::get('/allroutes',[ZonesController::class, 'allroutes2'])->middleware('auth:sanctum');;
 Route::post('/register', [UserContoller::class, 'register'])->middleware('api');
 Route::post('/logout',[UserContoller::class, 'logout'])->middleware('auth:sanctum');

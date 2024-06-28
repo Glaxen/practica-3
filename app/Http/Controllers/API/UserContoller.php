@@ -67,6 +67,5 @@ class UserContoller extends Controller
         $user->save();
         return response()->json(['message'=>'usuario creado con exito']);
 
-
     }
 }

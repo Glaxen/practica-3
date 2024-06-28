@@ -4,8 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Zone;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ZonesController extends Controller
 {
@@ -14,7 +15,7 @@ class ZonesController extends Controller
      */
     public function index()
     {
-        $zones=Zone::pluck("name","id");
+        $zones = Zone::pluck("name", "id");
         return response()->json($zones);
     }
 
@@ -70,18 +71,18 @@ class ZonesController extends Controller
         $user = Auth::user();
         // Verificar si el usuario existe
         if (!$user) {
-            return response()->json(['message' => 'Usuario no autenticado'], 200);
+            return response()->json(['message' => 'Usuario no autenticado'], 401);
         }
 
         // Verificar si el usuario tiene una zona asociada
         if (!$user->zone) {
-            return response()->json(['message' => 'Zona no encontrada para el usuario'], 200);
+            return response()->json(['message' => 'Zona no encontrada para el usuario'], 404);
         }
 
-        // Obtener las rutas asociadas a la zona del usuario
-        $routes = $user->zone->routes()->select([
-            'id', 'latitude_start', 'longitude_start', 'latitude_end', 'longitude_end'
-        ])->get();
+        // Obtener las rutas asociadas a la zona del usuario incluyendo datos adicionales de vehicleroutes
+        $routes = $user->zone->routes()->with(['vehicleRoutes' => function ($query) {
+            $query->select('route_id', 'date_route', 'hour_route');
+        }])->get(['routes.id', 'routes.name', 'routes.latitude_start', 'routes.longitude_start', 'routes.latitude_end', 'routes.longitude_end']);
 
         return response()->json($routes);
     }

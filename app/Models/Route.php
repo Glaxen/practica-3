@@ -28,6 +28,17 @@ class Route extends Model
         return $this->hasMany(Routezone::class);
     }
 
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class);
+    }
+
+    // Relación con VehicleRoutes
+    public function vehicleRoutes()
+    {
+        return $this->hasMany(VehicleRoute::class);
+    }
+
     /**
      * Relación con Vehicleroutes.
      */

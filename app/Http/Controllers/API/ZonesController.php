@@ -84,6 +84,12 @@ class ZonesController extends Controller
             $query->select('route_id', 'date_route', 'hour_route');
         }])->get(['routes.id', 'routes.name', 'routes.latitude_start', 'routes.longitude_start', 'routes.latitude_end', 'routes.longitude_end']);
 
-        return response()->json($routes);
+        // Obtener las coordenadas de la zona
+        $zoneCoords = $user->zone->zoneCoords()->get(['latitude', 'longitude']);
+
+        return response()->json([
+            'routes' => $routes,
+            'zone_coords' => $zoneCoords
+        ]);
     }
 }

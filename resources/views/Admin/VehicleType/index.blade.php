@@ -1,26 +1,19 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Colores de Vehículos')
 
 @section('content_header')
-    <h1>Listado de Vehiculos</h1>
+    <h1>Listado de Colores de Vehiculos</h1>
 @stop
 
 @section('content')
-    @if ($errors->any())
-        @foreach ($errors->all() as $error)
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                {{ $error }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endforeach
-    @endif
+
   <!-- Modal -->
   <div class="modal fade" id="modalbrand" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Vehiculo</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Color</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -40,42 +33,28 @@
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>IMAGEN</th>
-                        <th>Color</th>
                         <th>NOMBRE</th>
-                        <th>MARCA</th>
-                        <th>MODELO</th>
-                        <th>TIPO</th>
-                        <th>PLACA</th>
+                        <th>DESCRIPCION</th>
                         <th>ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($vehicles as $vehicle)
+                    @foreach ($tipoV as $tipovehiculo)
                     <tr>
-                        <td>{{$vehicle->id}}</td>
-                        <td>
-                            <img src="{{ asset($vehicle->image) }}" alt="" width="120px">
-                        </td>
-                        <td>
-                            <span style="background-color: {{ $vehicle->color }}; width:50px; height:50px; display:inline-block; border: 1px solid #000;"></span>
-                        </td>
-                        <td>{{$vehicle->name}}</td>
-                        <td>{{$vehicle->brand}}</td>
-                        <td>{{$vehicle->model}}</td>
-                        <td>{{$vehicle->type}}</td>
-                        <td>{{$vehicle->plate}}</td>
+                        <td>{{$tipovehiculo->id}}</td>
+                        <td>{{$tipovehiculo->name}}</td>
+                        <td>{{$tipovehiculo->description}}</td>
                         <td>
                             <div class="row">
                                 {{-- botton de editar --}}
                                 <div class="col-6">
-                                    <button id="{{$vehicle->id}}" type="button" class="btneditbrand btn btn-primary">
+                                    <button id="{{$tipovehiculo->id}}" type="button" class="btneditbrand btn btn-primary">
                                         <i class="fas fa-solid fa-pen"></i>
                                     </button>
                                 </div>
                                 {{-- boton de borrar  --}}
                                 <div class="col-6">
-                                    <form class="frmDelete" action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="post">
+                                    <form class="frmDelete" action="{{ route('admin.vehicletypes.destroy', $tipovehiculo->id) }}" method="post">
                                         @method('delete')
                                         @csrf
                                         <button type="submit" class="btn btn-danger"><i class="fas fa-solid fa-trash"></i></button>
@@ -116,28 +95,12 @@
                 "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
             }
     });
-    function listmodelbrand() {
-        var selectbrand = document.getElementById('selectbrand');
-        selectbrand.addEventListener("change",function () {
-            $.ajax({
-                url:"{{ route('filterbybrand', '_id') }}".replace('_id',selectbrand.value),
-                type:"GET",
-                success: function (response) {
-                    $('#selectmodel').empty();
-                    $.each(response, function(index, object) {
-                        $('#selectmodel').append($('<option>').text(object.name).attr('value', object.id));
-                    });
-                }
-            })
-        });
-    };
     $('#btncreatebrand').click(function() {
         $.ajax({
-            url:"{{ route('admin.vehicles.create') }}",
+            url:"{{ route('admin.vehicletypes.create') }}",
             type: "GET",
             success: function (response) {
                 $('#modalbrand .modal-body').html(response);
-                listmodelbrand();
                 $('#modalbrand').modal('show');
             },
             error: function(xhr, status, error) {
@@ -149,12 +112,11 @@
     $('.btneditbrand').click(function() {
         var id = $(this).attr('id');
         $.ajax({
-            url:"{{ route('admin.vehicles.edit','_id') }}".replace('_id',id),
+            url:"{{ route('admin.vehicletypes.edit','_id') }}".replace('_id',id),
             type: "GET",
             success: function (response) {
                 $('#modalbrand .modal-body').html(response);
-                listmodelbrand();
-                $('#modalbrand #exampleModalLabel').html('Actualizar Vehiculo');
+                $('#modalbrand #exampleModalLabel').html('Actualizar marca');
                 $('#modalbrand').modal('show');
             },
             error: function(xhr, status, error) {
@@ -169,7 +131,7 @@
             event.preventDefault();
             Swal.fire({
                     title: "Estas seguro?",
-                    text: "Estas seguro que deseas eliminar la categoria?",
+                    text: "Estas seguro que deseas eliminar el color?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",

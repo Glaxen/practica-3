@@ -26,10 +26,11 @@ class VehiclesController extends Controller
     public function index()
     {
         $vehicles = DB::select("
-        Select v.id,vi.image,v.name as name,b.name as brand,bm.name as model, vt.name as type,v.plate
+        Select v.id,vi.image,vc.description as color,v.name as name,b.name as brand,bm.name as model, vt.name as type,v.plate
         from vehicles v Inner join brands b on v.brand_id=b.id
         Inner join brandsmodels bm on v.model_id=bm.id
         Inner join vehicletypes vt on v.type_id=vt.id
+        Inner join vehiclecolors vc on v.color_id =vc.id
         Left join vehicleimages vi on (vi.vehicle_id=v.id AND vi.profile=1)
         where v.status = 1");
         return view('Admin.Vehicles.index',compact('vehicles'));

@@ -58,8 +58,10 @@
                 </table>
             </div>
         </div>
-        <div class="row">
-            <div class="col"></div>
+        <div class="row" style="height: 250px">
+            <div class="col" id='mapaActual'>
+
+            </div>
         </div>
     </div>
 </div>
@@ -110,5 +112,55 @@
             }
             });
     });
+</script>
+<script>
+    var map;
+    var markers = [];
+    function initMap() {
+        displayMap();
+    }
+
+    function displayMap() {
+        var mapOptions = {
+            zoom: 15
+        };
+
+        map = new google.maps.Map(document.getElementById('mapaActual'), mapOptions);
+
+        var perimeterCoords = @json($coordcap);
+        var convertedCoords = perimeterCoords.map(function(coord) {
+            return {
+                lat: parseFloat(coord.lat),
+                lng: parseFloat(coord.lng)
+            };
+        });
+        var perimeterPolygon = new google.maps.Polygon({
+            paths: convertedCoords,
+            strokeColor: '#33ddff',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#33ddff',
+            fillOpacity: 0.35
+        });
+
+        perimeterPolygon.setMap(map);
+
+
+
+        var bounds = new google.maps.LatLngBounds();
+
+        // Obtener los límites (bounds) del polígono
+        perimeterPolygon.getPath().forEach(function(coord) {
+            bounds.extend(coord);
+        });
+
+        // Obtener el centro de los límites (bounds)
+        var centro = bounds.getCenter();
+
+        // Mover el mapa para centrarse en el centro del perímetro
+        map.panTo(centro);
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer>
 </script>
 @stop

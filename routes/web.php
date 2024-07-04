@@ -12,6 +12,8 @@ use App\Http\Controllers\ZonecoordsController;
 use App\Http\Controllers\ZonesController;
 use App\Http\Controllers\Admin\RouteController;
 use App\Http\Controllers\Admin\RoutezoneController;
+use App\Http\Controllers\IndependentTables\VehiclecolorController;
+use App\Http\Controllers\IndependentTables\VehicletypeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -44,6 +46,9 @@ Route::get('/filter/vehicleroute',[VehiclerouteController::class, 'filtertable']
 Route::get('/vehicleroute/multiupdateform',[VehiclerouteController::class, 'showMultiUpdateModal'])->name('showMultiUpdateModal')->middleware('auth:sanctum');
 Route::get('/vehicleroute/multiupdate',[VehiclerouteController::class, 'multiUpdate'])->name('multiupdatevehicleroute')->middleware('auth:sanctum');
 
+Route::resource('/colors',VehiclecolorController::class)->names('admin.colors')->middleware('auth:sanctum');
+
+Route::resource('/vehicletype',VehicletypeController::class)->names('admin.vehicletypes')->middleware('auth:sanctum');
 
 Route::resource('/brands', BrandsController::class)->names('admin.brands')->middleware('auth:sanctum');
 Route::resource('/brandmodel', BrandsmodelController::class)->names('admin.brandsmodel')->middleware('auth:sanctum');

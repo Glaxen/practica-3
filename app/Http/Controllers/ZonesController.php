@@ -44,7 +44,8 @@ class ZonesController extends Controller
     {
         $zone = Zone::find($id);
         $coords = Zonecoords::where('zone_id',$zone->id)->get();
-        return view('Admin.Zones.show',compact('zone','coords'));
+        $coordcap = Zonecoords::select('latitude as lat', 'longitude as lng')->where('zone_id', $id)->get();
+        return view('Admin.Zones.show',compact('zone','coords','coordcap'));
     }
 
     /**

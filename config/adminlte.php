@@ -316,6 +316,11 @@ return [
             'icon' => 'fas fa-file-signature',
             'submenu' => [
                 [
+                    'text' => 'Tipo vehiculos',
+                    'route' => 'admin.vehicletypes.index',
+                    'icon' => 'fas fa-wrench',
+                ],
+                [
                     'text' => 'Marca',
                     'route' => 'admin.brands.index',
                     'icon' => 'fas fa-copyright',
@@ -324,6 +329,11 @@ return [
                     'text' => 'Modelo',
                     'route' => 'admin.brandsmodel.index',
                     'icon' => 'fas fa-truck-monster',
+                ],
+                [
+                    'text' => 'Colores',
+                    'route' => 'admin.colors.index',
+                    'icon' => 'fas fa-palette',
                 ],
             ],
         ],

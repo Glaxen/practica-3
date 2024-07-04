@@ -19,15 +19,15 @@ class VehiclerouteController extends Controller
      */
     public function index()
     {
-        $vehiculos = Vehicle::where('status',1)->pluck('name','id');
-        $rutas = Route::where('status',1)->pluck('name','id');
+        $vehiculos = Vehicle::where('status',1)->get();
+        $rutas = Route::where('status',1)->get();
 
         $vehicleroutes = DB::select("
         SELECT vr.id as id, v.name as vehiculo, r.name as route, vr.date_route as fecha, rs.name as status, vr.description as description, vr.hour_route as hora FROM `vehicleroutes` as vr
         INNER JOIN `routes` as r on vr.route_id = r.id
         INNER JOIN `vehicles` as v on vr.vehicle_id = v.id
         INNER JOIN `routestatus` as rs on vr.routestatus_id = rs.id
-        WHERE v.id = ? and r.id = ?",[$vehiculos->keys()->first(),$rutas->keys()->first()]);
+        WHERE v.id = ? and r.id = ?",[$vehiculos->first()->id,$rutas->first()->id]);
 
         return view('Admin.VehicleRoutes.index',compact('vehicleroutes','vehiculos','rutas'));
     }
@@ -52,19 +52,32 @@ class VehiclerouteController extends Controller
         $fechaInicio = Carbon::parse($request->fecha_inicio);
         $fechaFin = Carbon::parse($request->fecha_fin);
 
-        // Generar el periodo de fechas
         $period = CarbonPeriod::create($fechaInicio, $fechaFin);
+
+        $contadorRegistros = 0;
         foreach ($period as $date) {
-            Vehicleroute::create([
-                'date_route' => $date->format('Y-m-d'),
-                'vehicle_id' => $request->vehicle_id,
-                'routestatus_id' => 1,
-                'hour_route' => $request->hour_route,
-                'route_id' => $request->route_id,
-            ]);
+            $registrosPrevios = Vehicleroute::where('date_route', $date->format('Y-m-d'))
+            ->where('vehicle_id', $request->vehicle_id)
+            ->where('route_id', $request->route_id)
+            ->where('hour_route', $request->hour_route)
+            ->first();
+            if (!$registrosPrevios){
+                Vehicleroute::create([
+                    'date_route' => $date->format('Y-m-d'),
+                    'vehicle_id' => $request->vehicle_id,
+                    'routestatus_id' => 1,
+                    'hour_route' => $request->hour_route,
+                    'route_id' => $request->route_id,
+                ]);
+                $contadorRegistros++;
+            }
+        }
+        if($contadorRegistros == 0){
+            return redirect()->route('admin.vehicleroute.index')->with('error','la programación ya se ha realizado antes');
+        }else{
+            return redirect()->route('admin.vehicleroute.index')->with('success','se han insertado '. $contadorRegistros .' programaciones nuevas');
         }
 
-        return redirect()->route('admin.vehicleroute.index')->with('success','Rutas programadas con exito');
     }
 
     /**
@@ -109,7 +122,9 @@ class VehiclerouteController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $vehicleroute=Vehicleroute::find($id);
+        $vehicleroute->delete();
+        return redirect()->route('admin.vehicleroute.index')->with('success','Ruta borrada con exito');
     }
 
     public function showMultiUpdateModal(){

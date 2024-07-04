@@ -17,7 +17,12 @@ class VehicleoccupantsController extends Controller
      * Display a listing of the resource.
      */
     public function filterbyUsertype($id){
-        $users=User::all()->where('usertype_id','=',$id);
+        $vogeneral = Vehicleoccupant::all()->where('status',1);
+        $ids_omitir = [];
+        foreach ($vogeneral as $vehicleoccupant) {
+            $ids_omitir[] = $vehicleoccupant->user_id;
+        }
+        $users=User::all()->where('usertype_id','=',$id)->whereNotIn('id',$ids_omitir);
         return $users;
     }
 
@@ -99,11 +104,15 @@ class VehicleoccupantsController extends Controller
         from vehicleoccupants vo Inner join users u on vo.user_id=u.id
         Inner join usertypes ut on vo.usertype_id=ut.id
         where vo.vehicle_id = ? and vo.status = 1",[$id]);
-        // $vo = Vehicleoccupant::where('vehicle_id',$id)->get();
+        $vogeneral = Vehicleoccupant::all()->where('status',1);
+        $ids_omitir = [];
+        foreach ($vogeneral as $vehicleoccupant) {
+            $ids_omitir[] = $vehicleoccupant->user_id;
+        }
 
         $usertypes = Usertype::where('id','>', 2)->pluck('name','id');
         $usersFt = $usertypes->keys()->first();
-        $users = User::where('usertype_id','=', $usersFt)->pluck('name', 'id');
+        $users = User::where('usertype_id','=', $usersFt)->whereNotIn('id',$ids_omitir)->pluck('name', 'id');
         $vehiclesCapacity = Vehicle::where('id',$id)->pluck('capacity','id');
 
         return view('Admin.Vehiclesoccupant.edit',compact('usertypes','users','vehicles','vehiclesCapacity','vo'));
@@ -116,8 +125,8 @@ class VehicleoccupantsController extends Controller
     {
         $vo=Vehicleoccupant::where('vehicle_id',$id)->get();
         $ocupantes = $request->occupants;
-        $idsConjunto = array_map('intval', $request->ids);
         if ($ocupantes){
+            $idsConjunto = array_map('intval', $request->ids);
             $idsNoEnConjunto = Vehicleoccupant::whereNotIn('id', $idsConjunto)->pluck('id');
             Vehicleoccupant::whereIn('id', $idsNoEnConjunto)->update(['status' => 0]);
         }else{

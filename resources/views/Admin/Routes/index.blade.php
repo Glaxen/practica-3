@@ -54,13 +54,19 @@
                                 <td>{{ $route->status }}</td>
                                 <td>
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <button id="{{ $route->id }}" type="button"
                                                 class="btneditroute btn btn-primary">
                                                 <i class="fas fa-solid fa-pen"></i>
                                             </button>
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-4">
+                                            <button id="{{ $route->id }}" type="button"
+                                                class="btnshowroute btn btn-secondary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
                                             <form class="frmDelete" action="{{ route('admin.routes.destroy', $route->id) }}"
                                                 method="post">
                                                 @method('delete')
@@ -137,7 +143,24 @@
                 url: "{{ route('admin.routes.edit', '_id') }}".replace('_id', id),
                 type: "GET",
                 success: function(response) {
+                    console.log(response)
                     $('#modalroute #modalLabelRoute').html('Modificar Ruta');
+                    $('#modalroute .modal-body').html(response);
+                    $('#modalroute').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error en la solicitud AJAX:', error);
+                }
+            });
+        });
+        $('.btnshowroute').click(function() {
+            var id = $(this).attr('id');
+            $.ajax({
+                url: "{{ route('admin.routes.show', '_id') }}".replace('_id', id),
+                type: "GET",
+                success: function(response) {
+                    console.log(response)
+                    $('#modalroute #modalLabelRoute').html('Ver Ruta Actual');
                     $('#modalroute .modal-body').html(response);
                     $('#modalroute').modal('show');
                 },

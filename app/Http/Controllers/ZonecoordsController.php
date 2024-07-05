@@ -30,11 +30,13 @@ class ZonecoordsController extends Controller
     {
         $markers = json_decode($request->input('markers'), true);
         foreach ($markers as $coordenada) {
-            Zonecoords::create([
-                'latitude' => floatval($coordenada['latitude']),
-                'longitude' => floatval($coordenada['longitude']),
-                'zone_id' => $request->zone_id,
-            ]);
+            if (!isset($coordenada['id'])){
+                Zonecoords::create([
+                    'latitude' => floatval($coordenada['latitude']),
+                    'longitude' => floatval($coordenada['longitude']),
+                    'zone_id' => $request->zone_id,
+                ]);
+            }
         }
 
         return redirect()->route('admin.zones.show', $request->zone_id)->with('success', 'coordenadas agregadas');
@@ -63,7 +65,7 @@ class ZonecoordsController extends Controller
         $zone = Zone::find($id);
         $lastcoord = Zonecoords::select('latitude as lat', 'longitude as lng')
             ->where('zone_id', $id)->latest()->first();
-        $vertices = Zonecoords::select('latitude as lat', 'longitude as lng')->where('zone_id', $id)->get();
+        $vertices = Zonecoords::select('latitude as lat', 'longitude as lng', 'id')->where('zone_id', $id)->get();
 
         return view('Admin.Zonecoords.create', compact('zone', 'lastcoord', 'vertices'));
         //zonechords la latitud y longitud son double

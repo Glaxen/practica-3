@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Zone;
 use App\Models\Routezone;
 use App\Models\Route;
+use App\Models\Vehicleroute;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RouteController extends Controller
 {
@@ -69,7 +71,21 @@ class RouteController extends Controller
      */
     public function show(Route $route)
     {
-        return view('admin.routes.show', compact('route'));
+        $routeId = $route->id;
+
+        $zones = DB::select("
+            SELECT zones.*
+            FROM zones
+            INNER JOIN routezones ON zones.id = routezones.zone_id
+            WHERE routezones.route_id = ?
+        ", [$routeId]);
+        // Convertir el resultado en una colección de modelos Zone
+        $zones = Zone::hydrate($zones);
+
+        // Cargar las relaciones zonecoords
+        $zones->load('zonecoords');
+        // Envía las zonas a la vista de creación de rutas
+        return view('admin.routes.show', compact('route','zones'));
     }
 
     /**
@@ -79,7 +95,6 @@ class RouteController extends Controller
     {
         // Cargar todas las zonas y sus coordenadas
         $zones = Zone::with('zonecoords')->get();
-
         // Enviar la ruta y las zonas a la vista
         return view('admin.routes.edit', compact('route', 'zones'));
     }
@@ -129,13 +144,19 @@ class RouteController extends Controller
             $message = 'Route status changed to inactive because it is linked to vehicle routes.';
         } else { */
         // Elimina las relaciones en routezones asociadas a esta ruta
-        $route->routezones()->delete();
+        $vehiculoruta =Vehicleroute::where('route_id',$route->id)->get()->first();
+        if(!$vehiculoruta){
+            $route->routezones()->delete();
 
-        // Si no hay registros vinculados en vehicleroutes, elimina la ruta
-        $route->delete();
-        $message = 'Route deleted successfully.';
+            // Si no hay registros vinculados en vehicleroutes, elimina la ruta
+            $route->delete();
+           return redirect()->route('admin.routes.index')->with('success','Routa borrada');
+        }else{
+            return redirect()->route('admin.routes.index')->with('error',"La ruta no se puede borrar debido a que tiene una programacion asignada");
+        }
+
         /* } */
 
-        return redirect()->route('admin.routes.index')->with('success', $message);
+
     }
 }

@@ -12,14 +12,15 @@
     var latInput = document.getElementById('latitude');
     var lonInput = document.getElementById('longitude');
     var map;
+    idmarkers=[];
     var markers = [];
+    var perimeterPolygon;
+
     function initMap() {
         var lat = parseFloat(latInput.value);
         var lng = parseFloat(lonInput.value);
 
-
         if (isNaN(lat) || isNaN(lng)) {
-            // Obtener ubicación actual si los campos están vacíos o no contienen valores numéricos válidos
             navigator.geolocation.getCurrentPosition(function(position) {
                 lat = position.coords.latitude;
                 lng = position.coords.longitude;
@@ -28,30 +29,55 @@
                 displayMap(lat, lng);
             });
         } else {
-            // Utilizar las coordenadas de los campos de entrada
             displayMap(lat, lng);
         }
     }
 
     function addMarker(location) {
-            var marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                draggable: true
-            });
-            marker.addListener('rightclick', function() {
-                removeMarker(marker);
-            });
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            draggable: true
+        });
 
-            markers.push(marker);
-        }
+        marker.addListener('rightclick', function() {
+            removeMarker(marker);
+        });
+
+        marker.addListener('dragend', function() {
+            updatePerimeter();
+        });
+
+        markers.push(marker);
+        updatePerimeter();
+    }
 
     function removeMarker(marker) {
         var index = markers.indexOf(marker);
         if (index !== -1) {
             markers.splice(index, 1);
             marker.setMap(null);
+            updatePerimeter();
         }
+    }
+
+    function updatePerimeter() {
+        var coords = markers.map(function(marker) {
+            return {
+                lat: marker.getPosition().lat(),
+                lng: marker.getPosition().lng()
+            };
+        });
+
+        perimeterPolygon.setPaths(coords);
+
+        var bounds = new google.maps.LatLngBounds();
+        coords.forEach(function(coord) {
+            bounds.extend(coord);
+        });
+
+        var centro = bounds.getCenter();
+        map.panTo(centro);
     }
 
     function displayMap(lat, lng) {
@@ -64,36 +90,37 @@
         };
 
         map = new google.maps.Map(document.getElementById('map'), mapOptions);
-        var marker= new google.maps.Marker({
-            position:{
-                lat: lat,
-                lng: lng
-            },
-            map: map,
-            draggable: true
-        });
-        google.maps.event.addListener(marker, 'dragged', function (event) {
-            var latLng = event.latLng;
-            latInput.value = latLng.lat();
-            lonInput.value = latLng.lng();
-        });
-        markers.push(marker);
 
         map.addListener('click', function(event) {
-                addMarker(event.latLng);
+            addMarker(event.latLng);
         });
+
+
 
         var perimeterCoords = @json($vertices);
         var convertedCoords = perimeterCoords.map(function(coord) {
+            var marker = new google.maps.Marker({
+                position: {
+                    lat: parseFloat(coord.lat),
+                    lng: parseFloat(coord.lng)
+                }
+            });
+            markers.push(marker);
             return {
                 lat: parseFloat(coord.lat),
-                lng: parseFloat(coord.lng)
+                lng: parseFloat(coord.lng),
+                id: coord.id
             };
         });
-        var colors = ['#FF0000', '#ff7433', '#0000FF', '#FFFF00', '#33ddff ', '#00FFFF'];
-        var color = colors[Math.random()*4 % colors.length];
 
-        var perimeterPolygon = new google.maps.Polygon({
+        var colors = ['#FF0000', '#ff7433', '#0000FF', '#FFFF00', '#33ddff', '#00FFFF'];
+        var color = colors[Math.floor(Math.random() * colors.length)];
+        console.log(convertedCoords);
+        convertedCoords.forEach(coordinate => {
+            idmarkers.push(coordinate.id);
+        });
+
+        perimeterPolygon = new google.maps.Polygon({
             paths: convertedCoords,
             strokeColor: color,
             strokeOpacity: 0.8,
@@ -104,28 +131,23 @@
 
         perimeterPolygon.setMap(map);
 
-
-
         var bounds = new google.maps.LatLngBounds();
-
-        // Obtener los límites (bounds) del polígono
-        perimeterPolygon.getPath().forEach(function(coord) {
+        convertedCoords.forEach(function(coord) {
             bounds.extend(coord);
         });
 
-        // Obtener el centro de los límites (bounds)
         var centro = bounds.getCenter();
-
-        // Mover el mapa para centrarse en el centro del perímetro
         map.panTo(centro);
     }
 </script>
+
 <script>
 document.getElementById('coordenatesForm').addEventListener('submit', function(event) {
-    var markerData = markers.map(marker => {
+    var markerData = markers.map((marker,index) => {
         return {
             latitude: marker.getPosition().lat(),
-            longitude: marker.getPosition().lng()
+            longitude: marker.getPosition().lng(),
+            id: idmarkers[index]
         };
     });
 

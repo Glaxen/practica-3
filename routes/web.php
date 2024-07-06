@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\horario_mantenimientoController;
 use App\Http\Controllers\Admin\VehiclesController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\VehicleoccupantsController;
@@ -42,14 +43,14 @@ Route::middleware([
 });
 Route::get('/home', [AdminController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/filter/brand/{id}', [VehiclesController::class, 'filterModelbyBrand'])->name('filterbybrand')->middleware('auth:sanctum');
-Route::get('/filter/usertype/{id}',[VehicleoccupantsController::class,'filterbyUsertype'])->name('filterbyUsertype')->middleware('auth:sanctum');
-Route::get('/filter/vehicleroute',[VehiclerouteController::class, 'filtertable'])->name('filterTableVehicleRoute')->middleware('auth:sanctum');
-Route::get('/vehicleroute/multiupdateform',[VehiclerouteController::class, 'showMultiUpdateModal'])->name('showMultiUpdateModal')->middleware('auth:sanctum');
-Route::get('/vehicleroute/multiupdate',[VehiclerouteController::class, 'multiUpdate'])->name('multiupdatevehicleroute')->middleware('auth:sanctum');
+Route::get('/filter/usertype/{id}', [VehicleoccupantsController::class, 'filterbyUsertype'])->name('filterbyUsertype')->middleware('auth:sanctum');
+Route::get('/filter/vehicleroute', [VehiclerouteController::class, 'filtertable'])->name('filterTableVehicleRoute')->middleware('auth:sanctum');
+Route::get('/vehicleroute/multiupdateform', [VehiclerouteController::class, 'showMultiUpdateModal'])->name('showMultiUpdateModal')->middleware('auth:sanctum');
+Route::get('/vehicleroute/multiupdate', [VehiclerouteController::class, 'multiUpdate'])->name('multiupdatevehicleroute')->middleware('auth:sanctum');
 
-Route::resource('/colors',VehiclecolorController::class)->names('admin.colors')->middleware('auth:sanctum');
+Route::resource('/colors', VehiclecolorController::class)->names('admin.colors')->middleware('auth:sanctum');
 
-Route::resource('/vehicletype',VehicletypeController::class)->names('admin.vehicletypes')->middleware('auth:sanctum');
+Route::resource('/vehicletype', VehicletypeController::class)->names('admin.vehicletypes')->middleware('auth:sanctum');
 
 Route::resource('/brands', BrandsController::class)->names('admin.brands')->middleware('auth:sanctum');
 Route::resource('/brandmodel', BrandsmodelController::class)->names('admin.brandsmodel')->middleware('auth:sanctum');
@@ -61,12 +62,12 @@ Route::resource('/users', UsersController::class)->names('admin.users')->middlew
 Route::resource('/vehicleOccupants', VehicleoccupantsController::class)->names('admin.vehicleoccupants')->middleware('auth:sanctum');
 
 Route::resource('/zones', ZonesController::class)->names('admin.zones')->middleware('auth:sanctum');
-Route::resource('/zonescoords',ZonecoordsController::class)->names('admin.zonecoords')->middleware('auth:sanctum');
+Route::resource('/zonescoords', ZonecoordsController::class)->names('admin.zonecoords')->middleware('auth:sanctum');
 
 
-Route::resource('/vehicleRoutes',VehiclerouteController::class)->names('admin.vehicleroute')->middleware('auth:sanctum');
+Route::resource('/vehicleRoutes', VehiclerouteController::class)->names('admin.vehicleroute')->middleware('auth:sanctum');
 
 Route::resource('/routes', RouteController::class)->names('admin.routes');
 Route::resource('/routezones', RoutezoneController::class)->names('admin.routezones');
 Route::resource('/mantenimiento', mantenimientoController::class)->names('admin.mantenimiento');
-
+Route::resource('/horario_mantenimiento', horario_mantenimientoController::class)->names('admin.horario_mantenimiento');

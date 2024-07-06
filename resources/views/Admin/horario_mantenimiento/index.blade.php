@@ -2,7 +2,9 @@
 
 @section('title', 'Dashboard')
 
-
+@section('content_header')
+    <h1>Listado de Horarios de Mantenimiento </h1>
+@stop
 
 @section('content')
 
@@ -30,32 +32,27 @@
                 <table class="datatable table text-center" id="brandstrable">
                     <thead>
                         <tr>
-                            <th>id</th>
-                            <th>NOMBRE</th>
-                            <th>INICIO</th>
-                            <th>FIN</th>
+                            <th>DIA</th>
+                            <th>VEHICULO</th>
+                            <th>TIPO</th>
+                            <th>HORA INICIO</th>
+                            <th>HORA FIN</th>
                             <th>ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($mantenimientos as $mantenimiento)
+                        @foreach ($horario_mantenimientos as $horario_mantenimiento)
                             <tr>
-                                <td>{{ $mantenimiento->id }}</td>
-                                <td>{{ $mantenimiento->nombre }}</td>
-                                <td>{{ $mantenimiento->fecha_inicio }}</td>
-                                <td>{{ $mantenimiento->fecha_fin }}</td>
+                                <td>{{ $horario_mantenimiento->dia }}</td>
+                                <td>{{ $horario_mantenimiento->vehiculo }}</td>
+                                <td>{{ $horario_mantenimiento->tipo }}</td>
+                                <td>{{ $horario_mantenimiento->hora_inicio }}</td>
+                                <td>{{ $horario_mantenimiento->hora_fin }}</td>
                                 <td>
                                     <div class="row">
-                                        <div class="col-4">
-                                            <a class="btn btn-secondary"
-                                                style="background-color: rgb(189, 189, 51); color: white;"
-                                                href="{{ route('admin.horario_mantenimiento.index') }}">
-                                                <i class="fas fa-solid fa-calendar" style="color: white;"></i>
-                                            </a>
-                                        </div>
                                         {{-- botton de editar --}}
                                         <div class="col-4">
-                                            <button id="{{ $mantenimiento->id }}" type="button"
+                                            <button id="{{ $horario_mantenimiento->id }}" type="button"
                                                 class="btneditbrand btn btn-primary">
                                                 <i class="fas fa-solid fa-pen"></i>
                                             </button>
@@ -63,7 +60,7 @@
                                         {{-- boton de borrar  --}}
                                         <div class="col-4">
                                             <form class="frmDelete"
-                                                action="{{ route('admin.mantenimiento.destroy', $mantenimiento->id) }}"
+                                                action="{{ route('admin.horario_mantenimiento.destroy', $horario_mantenimiento->id) }}"
                                                 method="post">
                                                 @method('delete')
                                                 @csrf
@@ -109,12 +106,9 @@
                 "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
             }
         });
-
-
-
         $('#btncreatebrand').click(function() {
             $.ajax({
-                url: "{{ route('admin.mantenimiento.create') }}",
+                url: "{{ route('admin.horario_mantenimiento.create') }}",
                 type: "GET",
                 success: function(response) {
                     $('#modalbrand .modal-body').html(response);
@@ -126,15 +120,14 @@
             });
         });
 
-
         $('.btneditbrand').click(function() {
             var id = $(this).attr('id');
             $.ajax({
-                url: "{{ route('admin.mantenimiento.edit', '_id') }}".replace('_id', id),
+                url: "{{ route('admin.horario_mantenimiento.edit', '_id') }}".replace('_id', id),
                 type: "GET",
                 success: function(response) {
                     $('#modalbrand .modal-body').html(response);
-                    $('#modalbrand #exampleModalLabel').html('Actualizar mantenimiento');
+                    $('#modalbrand #exampleModalLabel').html('Actualizar horario');
                     $('#modalbrand').modal('show');
                 },
                 error: function(xhr, status, error) {

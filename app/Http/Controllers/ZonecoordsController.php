@@ -30,7 +30,7 @@ class ZonecoordsController extends Controller
     {
         $markers = json_decode($request->input('markers'), true);
         foreach ($markers as $coordenada) {
-            if (!isset($coordenada['id'])){
+            if (!isset($coordenada['id'])) {
                 Zonecoords::create([
                     'latitude' => floatval($coordenada['latitude']),
                     'longitude' => floatval($coordenada['longitude']),

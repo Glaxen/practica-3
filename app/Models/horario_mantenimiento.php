@@ -15,8 +15,8 @@ class horario_mantenimiento extends Model
         'dia',
         'id_vehiculo',
         'tipo',
-        'horario_inicio',
-        'horario_fin',
+        'hora_inicio',
+        'hora_fin',
         'id_mantenimiento',
 
 
@@ -28,4 +28,8 @@ class horario_mantenimiento extends Model
         return $this->belongsTo(mantenimiento::class);
     }
 
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
 }

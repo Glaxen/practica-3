@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('horario_mantenimientos', function (Blueprint $table) {
             $table->id();
-            $table->date('dia');
+            $table->string('dia');
             $table->unsignedBigInteger('id_vehiculo');
             $table->foreign('id_vehiculo')->references('id')->on('vehicles');
             $table->string('tipo');
-            $table->time('hora_inicio');
-            $table->time('hora_fin');
+            $table->time('hora_inicio')->nullable();
+            $table->time('hora_fin')->nullable();
             $table->unsignedBigInteger('id_mantenimiento');
             $table->foreign('id_mantenimiento')->references('id')->on('mantenimientos');
             $table->timestamps();

@@ -9,4 +9,10 @@ class Vehicle extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+
+    public function horario_mantenimiento()
+    {
+        return $this->hasMany(horario_mantenimiento::class);
+    }
 }

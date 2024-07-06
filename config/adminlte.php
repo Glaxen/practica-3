@@ -310,6 +310,18 @@ return [
         //     'type' => 'sidebar-menu-search',
         //     'text' => 'search',
         // ],
+        ['header' => 'MANTENIMIENTO'],
+        [
+            'text' => 'Actividades',
+            'icon' => 'fas fa-file-signature',
+            'submenu' => [
+                [
+                    'text' => 'Registrar mantenimiento',
+                    'route' => 'admin.mantenimiento.index',
+                    'icon' => 'fas fa-wrench',
+                ],
+            ],
+        ],
         ['header' => 'GESTIÓN DE VEHÍCULOS'],
         [
             'text' => 'Datos',

@@ -11,6 +11,7 @@ use App\Http\Controllers\IndependentTables\UsertypeController;
 use App\Http\Controllers\ZonecoordsController;
 use App\Http\Controllers\ZonesController;
 use App\Http\Controllers\Admin\RouteController;
+use App\Http\Controllers\Admin\mantenimientoController;
 use App\Http\Controllers\Admin\RoutezoneController;
 use App\Http\Controllers\IndependentTables\VehiclecolorController;
 use App\Http\Controllers\IndependentTables\VehicletypeController;
@@ -67,5 +68,5 @@ Route::resource('/vehicleRoutes',VehiclerouteController::class)->names('admin.ve
 
 Route::resource('/routes', RouteController::class)->names('admin.routes');
 Route::resource('/routezones', RoutezoneController::class)->names('admin.routezones');
-
+Route::resource('/mantenimiento', mantenimientoController::class)->names('admin.mantenimiento');
 

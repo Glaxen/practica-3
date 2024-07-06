@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-    <p>Bienvennido al modulo web de la aplicación gestora de residuos de manera ecológica</p>
+    <p>Bienvenido al modulo web de la aplicación gestora de residuos de manera ecológica</p>
 @stop
 
 @section('css')
